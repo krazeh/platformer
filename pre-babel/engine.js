@@ -21,11 +21,11 @@ class Engine {
 
     mainLoop(timestamp) {
         if (timestamp - this.lastFrameTimeMs <= this.maxSkipMs) {
-            frameID = requestAnimationFrame(this.mainLoop);
+            this.frameID = requestAnimationFrame(this.mainLoop.bind(this));
             return;
         }
 
-        let currentState = this.states.slice(-1);
+        let currentState = this.states.slice(-1)[0];
         this.delta += timestamp - this.lastFrameTimeMs;
         this.lastFrameTimeMs = timestamp;
 
@@ -49,7 +49,6 @@ class Engine {
             }
         }
 
-        draw(this.delta/this.timestep);
 
         if (currentState === null) {
             this.states = this.states.slice(0, -1);
@@ -61,22 +60,26 @@ class Engine {
             }
         }
 
-        this.frameID = requestAnimationFrame(this.mainLoop);
+        currentState.draw(this.delta/this.timestep);
+
+        this.frameID = requestAnimationFrame(this.mainLoop.bind(this));
     }
 
     init() {
         if (!this.started) {
             this.started = true;
             var state = new GameState(this.canvas, this.context);
-            var loop = this.mainLoop;
-            this.states.push(state);
+            var self = this;
+            var loop = self.mainLoop;
+            self.states.push(state);
 
             this.frameID = requestAnimationFrame(function (timestamp) {
-                this.lastFrameTimeMs = timestamp;
-                this.lastFPSUpdate = timestamp;
-                this.framesThisSecond = 0;
-                this.frameID = requestAnimationFrame(loop);
+                self.lastFrameTimeMs = timestamp;
+                self.lastFPSUpdate = timestamp;
+                self.framesThisSecond = 0;
+                self.frameID = requestAnimationFrame(loop.bind(self));
             })
+            
         }
     }
 }

@@ -13,7 +13,7 @@ class BaseState {
     }
 
     draw(interpolation) {
-        this.objects = Sort.zSort(objects);
+        this.objects = Sort.zSort(this.objects);
 
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         for (let obj of this.objects)
