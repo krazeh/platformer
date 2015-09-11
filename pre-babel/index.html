@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Platformer</title>
+    <style>
+        * {padding: 0; margin: 0;}
+        canvas {background: #eee; display: block; margin: 0 auto;}
+        .container {margin: 0 auto; width: 200px; padding-top: 1em;}
+        .center-align {margin: 0 auto; display: block; width: 2em;}
+        button {width: 6em !important; height: 2em;}
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="480" height="320">HTML5 Canvas</canvas>
+    <div class="container">
+        <div id="fps" class="center-align"></div>
+        <button class="center-align" onclick="Game.init()">Start</button>
+    </div>
+    <script src="basestate.js"></script>
+    <script src="gamestate.js"></script>
+    <script src="index.js"></script>
+    <script src="utility.js"></script>
+    <script src="engine.js"></script>
+    <script src="gameobject.js"></script>
+</html>

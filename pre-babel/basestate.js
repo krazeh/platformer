@@ -10,8 +10,6 @@ class BaseState {
     update(delta) {
         for (let obj of this.objects)
             obj.update(delta);
-
-        return this;
     }
 
     draw(interpolation) {

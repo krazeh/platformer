@@ -2,7 +2,7 @@
 
 class Engine {
 
-    constructor(canvas) {
+    constructor() {
         this.lastFrameTimeMs = 0
         this.maxFPS = 60;
         this.delta = 0;
@@ -15,13 +15,14 @@ class Engine {
         this.maxSkipMs = 0.01;
         this.fpsDisplay = document.getElementById("fps"),
         this.states = [],
-        this.canvas = canvas,
-        this.context = canvas.getContext("2d");
+        this.canvas = document.getElementById("myCanvas"),
+        this.context = this.canvas.getContext("2d");
     }
 
     update(delta) {
 
     }
+
 
     mainLoop(timestamp) {
         if (timestamp - lastFrameTimeMs <= maxSkipMs) {
@@ -44,16 +45,42 @@ class Engine {
         var numUpdateSteps = 0;
 
         while (delta >= timestep) {
-            currentState.update(timestep);
+            currentState = currentState.update(timestep);
             delta -= timestep;
 
-            if (++numUpdateSteps >= 240) {
+            if (++numUpdateSteps >= 240 || currentState === null) {
 
                 break;
             }
         }
 
         draw(delta/timestep);
+
+        if (currentState === null) {
+            this.states = this.states.slice(0, -1);
+
+            if (this.states.length === 0) {
+                window.cancelAnimationFrame(mainLoop);
+                console.log("loop stopped");
+                return;
+            }
+        }
+
         frameID = requestAnimationFrame(mainLoop);
+    }
+
+    init() {
+        if (!this.started) {
+            this.started = true;
+            var state = new GameState(this.canvas, this.context);
+            this.states.push(state);
+
+            this.frameID = requestAnimationFrame(function (timestamp) {
+                this.lastFrameTimeMs = timestamp;
+                this.lastFPSUpdate = timestamp;
+                this.framesThisSecond = 0;
+                this.frameID = requestAnimationFrame(this.mainLoop);
+            })
+        }
     }
 }
